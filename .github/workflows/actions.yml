@@ -13,9 +13,14 @@ jobs:
 
     - name: Checkout Repo
       uses: actions/checkout@v1
+      
+    - name: Setup Terraform
+      uses: hashicorp/setup-terraform@v2
+      with:
+        terraform_version: 1.1.7
 
     - name: Terraform Init
-      uses: hashicorp/terraform-github-actions/init@v0.4.0
+      uses: hashicorp/setup-terraform@v2
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         TF_ACTION_WORKING_DIR: 'terraform'
@@ -23,10 +28,10 @@ jobs:
         AWS_SECRET_ACCESS_KEY:  ${{ secrets.AWS_SECRET_ACCESS_KEY }}
 
     - name: Terraform Validate
-      uses: hashicorp/terraform-github-actions/validate@v0.3.7
+      uses: hashicorp/setup-terraform@v2
 
     - name: Terraform Apply
-      uses: hashicorp/terraform-github-actions/apply@v0.4.0
+      uses: hashicorp/setup-terraform@v2
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         TF_ACTION_WORKING_DIR: 'terraform'
