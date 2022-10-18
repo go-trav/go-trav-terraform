@@ -19,7 +19,9 @@ provider "aws" {
   version = "4.34.0"
   region  = "ap-south-1"
 }
-
+on:
+  push:
+    branches: [ "main" ]
 resource "aws_s3_bucket" "s3Bucket" {
      bucket = "vinayworks"
      acl       = "public-read"
