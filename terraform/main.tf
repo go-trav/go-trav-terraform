@@ -8,6 +8,12 @@ terraform {
   }
 
   required_version = ">=0.14.9"
+
+  backend "s3" {
+      bucket = "vinayworks"
+      key    = "arn:aws:kms:ap-south-1:211544326561:alias/aws/s3"
+      region = "ap-south-1"
+  }
 }
 
 provider "aws" {
