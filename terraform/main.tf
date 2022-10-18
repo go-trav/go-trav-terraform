@@ -21,6 +21,14 @@ provider "aws" {
   region  = "ap-south-1"
 }
 
+resource "aws_s3_bucket" "s3Bucket" {
+     bucket = "vinayworks"
+
+     versioning {
+       enabled = true
+     }
+}
+
 # create default vpc if one does not exit
 resource "aws_default_vpc" "default_vpc" {
 
