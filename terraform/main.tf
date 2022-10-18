@@ -11,8 +11,6 @@ data "aws_ami" "amazon_linux_2" {
     name   = "name"
     values = ["amzn2-ami-hvm*"]
   }
-  
-  owners = ["211544326561"]
 }
 
 provider "aws" {
