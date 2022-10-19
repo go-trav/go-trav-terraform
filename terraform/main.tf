@@ -25,41 +25,6 @@ resource "aws_default_subnet" "default_az1" {
 }
 
 
-# create security group for the ec2 instance
-resource "aws_security_group" "ec2_security_group" {
-  name        = "ec2 security group"
-  description = "allow access on ports 80 and 22"
-  vpc_id      = aws_default_vpc.default_vpc.id
-
-  ingress {
-    description      = "http access"
-    from_port        = 80
-    to_port          = 80
-    protocol         = "tcp"
-    cidr_blocks      = ["0.0.0.0/0"]
-  }
-
-  ingress {
-    description      = "ssh access"
-    from_port        = 22
-    to_port          = 22
-    protocol         = "tcp" 
-    cidr_blocks      = []
-  }
-
-  egress {
-    from_port        = 0
-    to_port          = 0
-    protocol         = -1 
-    cidr_blocks      = ["0.0.0.0/0"] 
-  }
-
-  tags   = {
-    Name = "ec2 security group"
-  }
-}
-
-
 # use data source to get a registered amazon linux 2 ami
 data "aws_ami" "amazon_linux_2" {
   most_recent = true
@@ -82,7 +47,7 @@ resource "aws_instance" "ec2_instance" {
   ami                    = data.aws_ami.amazon_linux_2.id
   instance_type          = "t2.micro"
   subnet_id              = aws_default_subnet.default_az1.id
-  vpc_security_group_ids = [aws_security_group.ec2_security_group.id]
+  vpc_security_group_ids = ["sg-0f488d51c8c3be3c7"]
   key_name               = "gotravkeypair"
   user_data              = file("install_website.sh")
 
