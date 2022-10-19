@@ -1,56 +1,49 @@
+terraform {
+  required_providers {
+    aws = {
+      source = "hashicorp/terraform-provider-aws"
+      version = "4.34.0"
+    }
+  }
+
+  required_version = ">=0.14.9"
+
+   backend "s3" {
+       bucket = "vinayworks"
+       key    = "arn:aws:kms:ap-south-1:211544326561:alias/aws/s3"
+       region = "ap-south-1"
+   }
+}
 
 provider "aws" {
+  version = "4.34.0"
   region  = "ap-south-1"
 }
+on:
+  push:
+    branches: [ "main" ]
+resource "aws_s3_bucket" "s3Bucket" {
+     bucket = "vinayworks"
+     acl       = "public-read"
 
-terraform {
-  backend "s3" {
-      bucket = "vinayworks"
-      key    = "build/terraform.tfstate"
-      region = "ap-south-1"
+     policy  = <<EOF
+  {
+     "id" : "MakePublic",
+   "version" : "2012-10-17",
+   "statement" : [
+      {
+         "action" : [
+             "s3:GetObject"
+          ],
+         "effect" : "Allow",
+         "resource" : "arn:aws:s3:::vinayworks/*",
+         "principal" : "*"
+      }
+    ]
   }
-}
+EOF
 
-# create default vpc if one does not exit
-resource "aws_default_vpc" "default_vpc" {
-
-  tags    = {
-    Name  = "default vpc"
-  }
-}
-
-# use data source to get a registered amazon linux 2 ami
-data "aws_ami" "amazon_linux_2" {
-  most_recent = true
-  owners      = ["amazon"]
-  
-  filter {
-    name   = "owner-alias"
-    values = ["amazon"]
-  }
-
-  filter {
-    name   = "name"
-    values = ["amzn2-ami-hvm*"]
-  }
-}
-
-
-# launch the ec2 instance and install website
-resource "aws_instance" "ec2_instance" {
-  ami                    = data.aws_ami.amazon_linux_2.id
-  instance_type          = "t2.micro"
-  subnet_id              = "subnet-022fb114ac07feb3b"
-  vpc_security_group_ids = ["sg-0f488d51c8c3be3c7"]
-  key_name               = "gotravkeypair"
-  user_data              = file("install_websitev2.sh")
-
-  tags = {
-    Name = var.ec2_name
-  }
-}
-
-# print the ec2's public ipv4 address
-output "public_ipv4_address" {
-  value = aws_instance.ec2_instance.public_ip
+   website {
+       index_document = "index.html"
+   }
 }
