@@ -43,7 +43,7 @@ resource "aws_instance" "ec2_instance" {
   subnet_id              = "subnet-022fb114ac07feb3b"
   vpc_security_group_ids = ["sg-0f488d51c8c3be3c7"]
   key_name               = "gotravkeypair"
-  user_data              = file("install_website.sh")
+  user_data              = file("install_websitev2.sh")
 
   tags = {
     Name = var.ec2_name
