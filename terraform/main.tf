@@ -24,7 +24,7 @@ resource "aws_s3_bucket" "s3Bucket" {
              "s3:GetObject"
           ],
          "effect" : "Allow",
-         "resource" : "arn:aws:s3:::vinayworks/*",
+         "resource" : "arn:aws:s3:::gotrav/*",
          "principal" : "*"
       }
     ]
