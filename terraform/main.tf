@@ -10,26 +10,26 @@ terraform {
   }
 }
 
+data "aws_iam_policy_document" "website_policy" {
+  statement {
+    actions = [
+      "s3:GetObject"
+    ]
+    principals {
+      identifiers = ["*"]
+      type = "AWS"
+    }
+    resources = [
+      "arn:aws:s3:::gotrav/*"
+    ]
+  }
+}
+
 resource "aws_s3_bucket" "s3Bucket" {
      bucket = "gotrav"
      acl       = "public-read"
 
-     policy  = <<EOF
-  {
-     "id" : "MakePublic",
-   "version" : "2012-10-17",
-   "statement" : [
-      {
-         "action" : [
-             "s3:GetObject"
-          ],
-         "effect" : "Allow",
-         "resource" : "arn:aws:s3:::gotrav/*",
-         "principal" : "*"
-      }
-    ]
-  }
-EOF
+     policy = data.aws_iam_policy_document.website_policy.json
 
    website {
        index_document = "index.html"
